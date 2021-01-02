@@ -1,4 +1,6 @@
-require("dotenv").config();
+const env = process.env.NODE_ENV || "development";
+require("dotenv").config({ path: `./config/enviroment/.${env}` });
+console.log(process.env.POSTGRES_USER);
 
 module.exports = {
   development: {
