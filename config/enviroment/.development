@@ -1,7 +1,7 @@
 POSTGRES_USER=admin
 POSTGRES_PASSWORD=admin
 POSTGRES_DB=lms
-CLIENT_ADDRESS=http://3.10.224.193
+CLIENT_ADDRESS=http://localhost:9001
 jwtSecret=bismillah
 jwtResetSecret=bismillahReset
 NODE_ENV=development

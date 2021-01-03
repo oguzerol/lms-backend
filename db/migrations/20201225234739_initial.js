@@ -62,7 +62,6 @@ exports.up = async (knex) => {
     table.string("type").notNullable();
     table.string("info").notNullable();
     table.string("content").notNullable();
-    table.string("correct_answer").notNullable();
     references(table, tableNames.exams);
     addDefaultColumns(knex, table);
   });
