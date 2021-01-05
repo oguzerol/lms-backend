@@ -60,17 +60,16 @@ exports.up = async (knex) => {
   await knex.schema.createTable(tableNames.questions, (table) => {
     table.increments().notNullable();
     table.string("type").notNullable();
-    table.string("info").notNullable();
-    table.string("content").notNullable();
+    table.text("info");
+    table.text("content").notNullable();
     references(table, tableNames.exams);
     addDefaultColumns(knex, table);
   });
 
   await knex.schema.createTable(tableNames.answers, (table) => {
     table.increments().notNullable();
-    table.string("type").notNullable();
-    table.string("info").notNullable();
-    table.string("content").notNullable();
+    table.string("label").notNullable();
+    table.text("content"); // not nullable
     table.boolean("is_correct").notNullable();
     references(table, tableNames.exams);
     references(table, tableNames.questions);

@@ -5,11 +5,12 @@ const questionOrders = {
 };
 
 const answerOrders = {
-  answerOne: 0,
-  answerTwo: 1,
-  answerThree: 2,
-  answerFour: 3,
-  answerFive: 5,
+  A: 0,
+  B: 1,
+  C: 2,
+  D: 3,
+  E: 5,
+  is_correct: 6,
 };
 
 module.exports = {

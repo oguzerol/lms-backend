@@ -6,7 +6,7 @@ const addDefaultColumns = (knex, table) => {
 
 const references = (table, tableName) => {
   table
-    .integer(`${tableName}_id`)
+    .integer(`${tableName.substring(0, tableName.length - 1)}_id`)
     .unsigned()
     .references("id")
     .inTable(tableName)
