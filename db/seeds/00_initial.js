@@ -9,12 +9,6 @@ const {
 const XLSX = require("xlsx");
 var fs = require("fs");
 
-async function asyncForEach(array, callback) {
-  for (let index = 0; index < array.length; index++) {
-    await callback(array[index], index, array);
-  }
-}
-
 /**
  * @param {Knex} knex
  */
@@ -59,7 +53,7 @@ exports.seed = async (knex) => {
 
   const examId = await knex(tableNames.exams).insert([exam], "id");
 
-  await asyncForEach(excelData, async (question) => {
+  for (const question of excelData) {
     const newQuestion = {
       exam_id: examId[0],
       type: question[questionOrders.type],
@@ -72,7 +66,7 @@ exports.seed = async (knex) => {
       "id"
     );
 
-    await asyncForEach(answerLabels, async (label) => {
+    for (const label of answerLabels) {
       const newAnswer = {
         label,
         question_id: questionId[0],
@@ -80,6 +74,6 @@ exports.seed = async (knex) => {
         is_correct: question[answerOrders.is_correct] === label,
       };
       await knex(tableNames.answers).insert([newAnswer]);
-    });
-  });
+    }
+  }
 };
