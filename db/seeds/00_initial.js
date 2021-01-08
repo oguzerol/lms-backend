@@ -1,19 +1,19 @@
 const Knex = require("knex");
 const bcrypt = require("bcrypt");
+const XLSX = require("xlsx");
+const fs = require("fs");
+
 const tableNames = require("../../src/constants/tableNames");
 const answerLabels = require("../../src/constants/answerLabels");
 const {
   answerOrders,
   questionOrders,
 } = require("../../src/constants/excelOrders");
-const XLSX = require("xlsx");
-var fs = require("fs");
 
 /**
  * @param {Knex} knex
  */
 exports.seed = async (knex) => {
-  // insert admin
   await Promise.all(
     [
       tableNames.userExams,
@@ -23,8 +23,10 @@ exports.seed = async (knex) => {
       tableNames.users,
     ].map((tableName) => knex(tableName).del())
   );
-  const salt = await bcrypt.genSalt(10);
 
+  // insert super admin
+
+  const salt = await bcrypt.genSalt(10);
   const sa = {
     email: "oe@onlineydt.com",
     name: "Oguz",
@@ -35,8 +37,10 @@ exports.seed = async (knex) => {
 
   await knex(tableNames.users).insert([sa]);
 
-  var data = fs.readFileSync(process.cwd() + "/src/constants/exam_sample.xlsx");
-  var workbook = XLSX.read(data, { type: "buffer" });
+  const data = fs.readFileSync(
+    process.cwd() + "/src/constants/exam_sample.xlsx"
+  );
+  const workbook = XLSX.read(data, { type: "buffer" });
   const firstWorksheet = workbook.Sheets[workbook.SheetNames[0]];
   const excelData = XLSX.utils.sheet_to_json(firstWorksheet, { header: 1 });
 
@@ -66,14 +70,16 @@ exports.seed = async (knex) => {
       "id"
     );
 
-    for (const label of answerLabels) {
-      const newAnswer = {
+    const answers = answerLabels.reduce((answer, label) => {
+      answer.push({
         label,
         question_id: questionId[0],
         content: question[answerOrders[label]],
         is_correct: question[answerOrders.is_correct] === label,
-      };
-      await knex(tableNames.answers).insert([newAnswer]);
-    }
+      });
+      return answer;
+    }, []);
+
+    await knex(tableNames.answers).insert(answers);
   }
 };
