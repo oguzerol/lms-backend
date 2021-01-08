@@ -15,6 +15,6 @@ RUN yarn install
 # Bundle app source
 COPY . /usr/src/app
 
-EXPOSE 5000
+EXPOSE 7000
 
 CMD [ "yarn", "start" ]

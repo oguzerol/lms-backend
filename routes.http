@@ -1,0 +1,6 @@
+@host =http://localhost:7000
+
+GET {{host}}
+
+### Get Users
+GET {{host}}/api/v1/users
