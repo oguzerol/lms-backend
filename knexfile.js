@@ -16,6 +16,5 @@ module.exports = {
     seeds: {
       directory: "./db/seeds",
     },
-    searchPath: ["knex", "public"],
   },
 };
