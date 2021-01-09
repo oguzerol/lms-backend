@@ -7,10 +7,10 @@
     "start": "nodemon src/index.js",
     "dev": "nodemon src/index.js",
     "lint": "eslint --fix src",
-    "test": "mocha --exit",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
-    "seed": "knex seed:run"
+    "seed": "knex seed:run",
+    "test": "jest"
   },
   "keywords": [],
   "author": "oguzerol91@gmail.com",
@@ -31,7 +31,7 @@
     "eslint": "^7.14.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "mocha": "^8.2.1",
+    "jest": "^26.6.3",
     "nodemon": "^2.0.6",
     "supertest": "^6.0.1"
   }
