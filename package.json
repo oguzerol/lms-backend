@@ -10,7 +10,7 @@
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
-    "test": "jest"
+    "test": "jest --coverage"
   },
   "keywords": [],
   "author": "oguzerol91@gmail.com",

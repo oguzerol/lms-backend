@@ -2,5 +2,11 @@
 
 GET {{host}}
 
+### Get Api
+GET {{host}}/api/v1
+
 ### Get Users
 GET {{host}}/api/v1/users
+
+### Get Products
+GET {{host}}/api/v1/products
