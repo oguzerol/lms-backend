@@ -2,11 +2,18 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
-
+const Knex = require("knex");
+const { Model } = require("objection");
 require("dotenv").config();
+const knexConfig = require("../knexfile");
+const enviroment = process.env.NODE_ENV || "development";
+const connectionConfig = knexConfig[enviroment];
+const knex = Knex(connectionConfig);
 
 const middlewares = require("./middlewares");
 const api = require("./api/api.routes");
+
+Model.knex(knex);
 
 const app = express();
 
