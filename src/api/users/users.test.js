@@ -10,9 +10,8 @@ describe("GET /api/v1/users", () => {
       .expect(200);
 
     expect(response.body[0].id).toEqual(1);
-    afterAll(async (done) => {
-      await db.destroy();
-      done();
-    });
+  });
+  afterAll(async () => {
+    await db.destroy();
   });
 });
