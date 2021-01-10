@@ -1,9 +1,8 @@
-require("dotenv").config({ path: "./config/enviroment/.development" });
-
 module.exports = {
   development: {
     client: "pg",
     connection: {
+      host: "host.docker.internal",
       database: process.env.POSTGRES_DB,
       user: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
