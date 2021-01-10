@@ -1,3 +1,5 @@
+require("dotenv").config({ path: "./config/enviroment/.development" });
+
 module.exports = {
   development: {
     client: "pg",
@@ -17,7 +19,8 @@ module.exports = {
   test: {
     client: "pg",
     connection: {
-      database: process.env.POSTGRES_DB,
+      database: "test",
+      host: "localhost",
       user: process.env.POSTGRES_USER,
       password: process.env.POSTGRES_PASSWORD,
     },
