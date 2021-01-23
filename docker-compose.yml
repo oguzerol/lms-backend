@@ -2,6 +2,7 @@ version: "3"
 services:
   postgres:
     image: postgres
+    restart: always
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -15,6 +16,7 @@ services:
   pgadmin:
     depends_on:
       - postgres
+    restart: always
     image: dpage/pgadmin4
     container_name: pgadmin
     environment:
@@ -28,6 +30,7 @@ services:
       context: ./
     depends_on:
       - postgres
+    restart: always
     environment:
       - NODE_ENV=${NODE_ENV}
       - jwtSecret=${jwtSecret}
