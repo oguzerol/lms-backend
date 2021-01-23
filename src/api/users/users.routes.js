@@ -1,6 +1,6 @@
-const to = require("await-to-js").default;
-const User = require("./users.model");
-const express = require("express");
+import to from "await-to-js";
+import User from "./users.model";
+import express from "express";
 
 const router = express.Router();
 

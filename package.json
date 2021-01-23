@@ -4,8 +4,8 @@
   "description": "Learning Management System Backend",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.js",
-    "dev": "nodemon src/index.js",
+    "start": "nodemon --exec babel-node src/index.js",
+    "dev": "nodemon --exec babel-node src/index.js",
     "lint": "eslint --fix src",
     "migrate": "knex migrate:latest",
     "rollback": "knex migrate:rollback",
@@ -20,6 +20,10 @@
   "author": "oguzerol91@gmail.com",
   "license": "MIT",
   "dependencies": {
+    "@babel/cli": "^7.12.10",
+    "@babel/core": "^7.12.10",
+    "@babel/node": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
     "await-to-js": "^2.1.1",
     "bcrypt": "^5.0.0",
     "cors": "^2.8.5",
