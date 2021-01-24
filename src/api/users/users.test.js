@@ -9,7 +9,7 @@ describe("GET /api/v1/users", () => {
       .expect("Content-type", /json/)
       .expect(200);
 
-    expect(response.body[0].id).toEqual(1);
+    expect(response.body.length).toBeGreaterThan(0);
   });
   afterAll(async () => {
     await db.destroy();

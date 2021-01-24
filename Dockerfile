@@ -4,13 +4,13 @@ FROM node:10-alpine
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-RUN yarn add node-gyp 
+RUN npm install node-gyp 
 RUN npm install -g nodemon
-RUN yarn add bcrypt
+RUN npm install add bcrypt
 
 # Install app dependencies
 COPY package*.json /usr/src/app/
-RUN yarn install
+RUN npm install
 
 # Bundle app source
 COPY . /usr/src/app

@@ -22,11 +22,10 @@ exports.up = async (knex) => {
       table.boolean("is_student").defaultTo(true);
       table.string("phone");
       table.text("address");
-      table.boolean("is_staff").defaultTo(false);
       table.boolean("is_admin").defaultTo(false);
       table.boolean("is_super_admin").defaultTo(false);
       table.text("reset_link");
-      table.datetime("last_login");
+      table.timestamp("last_login");
       addDefaultColumns(knex, table);
     }),
     knex.schema.createTable(tableNames.exams, (table) => {
@@ -35,20 +34,20 @@ exports.up = async (knex) => {
       table.string("description").notNullable();
       table.decimal("price", 10, 2).notNullable();
       table
-        .datetime("standalone_usage_time")
+        .timestamp("standalone_usage_time")
         .notNullable()
         .defaultTo(knex.fn.now());
       table.integer("question_count").notNullable();
-      table.datetime("start_time").notNullable();
-      table.datetime("end_time").notNullable();
+      table.timestamp("start_time").notNullable();
+      table.timestamp("end_time").notNullable();
       addDefaultColumns(knex, table);
     }),
   ]);
 
   await knex.schema.createTable(tableNames.userExams, (table) => {
     table.increments().notNullable();
-    table.datetime("standalone_start_time");
-    table.datetime("standalone_end_time");
+    table.timestamp("standalone_start_time");
+    table.timestamp("standalone_end_time");
     table.integer("standalone_status");
     table.json("exam").notNullable();
     table.json("answers").notNullable().defaultTo('{"data": []}');
