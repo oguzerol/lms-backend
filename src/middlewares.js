@@ -1,3 +1,5 @@
+// TODO: Create test for those functions
+
 function notFound(req, res, next) {
   res.status(404);
   const error = new Error(`🔍 - Not Found - ${req.originalUrl}`);
