@@ -12,8 +12,9 @@ exports.up = async (knex) => {
       table.increments().notNullable();
       table.string("email", 254).notNullable().unique();
       table.string("password", 127).notNullable();
-      table.string("name").notNullable();
-      table.string("surname").notNullable();
+      table.string("username").notNullable();
+      table.string("name");
+      table.string("surname");
       table.date("birth_date");
       table.string("city");
       table.string("town");

@@ -1,5 +1,4 @@
 import express from "express";
-import Joi from "joi";
 const { validate } = require("express-validation");
 import * as authController from "./auth.controller";
 import * as authLimiter from "./auth.limiter";
@@ -11,6 +10,13 @@ router.post(
   authLimiter.loginRateLimiter,
   validate(authValidation.login),
   authController.login
+);
+
+router.post(
+  "/register",
+  // authLimiter.registerRateLimiter,
+  validate(authValidation.register),
+  authController.register
 );
 
 module.exports = router;

@@ -31,6 +31,7 @@ exports.seed = async (knex) => {
     email: "oe@onlineydt.com",
     name: "Oguz",
     surname: "EROL",
+    username: "oguzerol",
     password: await bcrypt.hash("010203asd", salt),
     is_super_admin: true,
   };

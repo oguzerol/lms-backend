@@ -11,11 +11,21 @@ GET {{host}}/api/v1/users
 ### Get Products
 GET {{host}}/api/v1/products
 
-### Get Products
+### Login sa
 POST {{host}}/api/v1/auth/login
 Content-Type: application/json
 
 {
     "email": "oe@onlineydt.com",
     "password": "010203asd"
+}
+
+### Register
+POST {{host}}/api/v1/auth/register
+Content-Type: application/json
+
+{
+    "email": "oguzerol1@test.com",
+    "password": "010203asd",
+    "username": "oguztest1"
 }

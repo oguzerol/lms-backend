@@ -8,3 +8,11 @@ export const login = {
       .required(),
   }),
 };
+
+export const register = {
+  body: Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(6).required(),
+    username: Joi.string().min(3).required(),
+  }),
+};
