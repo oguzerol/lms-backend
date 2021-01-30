@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
   if (err)
     return res.status(400).json({
       status: false,
-      message: "Kullanıcı bilgileri güncellenirken bir hata oluştu.",
+      message: "Kullanıcı bilgileri alınırken bir hata oluştu.",
       stack: err.message,
     });
   res.json(users);
