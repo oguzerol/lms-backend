@@ -2,6 +2,7 @@ import to from "await-to-js";
 import bcrypt from "bcrypt";
 import jwtGenerator from "../../utils/jwtGenerator";
 import User from "../users/users.model";
+import jwt from "jsonwebtoken";
 
 const errorMessages = {
   invalidLogin: "Kullanıcı adı veya şifre yanlış.",
@@ -95,4 +96,21 @@ export async function register(req, res) {
 
   const jwtToken = jwtGenerator(user);
   return res.json(jwtToken);
+}
+
+export function me(req, res) {
+  const token = req.header("token");
+
+  if (!token) {
+    return res.status(403).json({ msg: "authorization denied" });
+  }
+
+  try {
+    const verify = jwt.verify(token, process.env.jwtSecret);
+
+    req.user = verify.user;
+    res.json(req.user);
+  } catch (err) {
+    res.status(401).json({ status: false, message: "Token is not valid" });
+  }
 }

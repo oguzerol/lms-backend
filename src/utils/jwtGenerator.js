@@ -3,11 +3,11 @@ import jwt from "jsonwebtoken";
 export default function (user) {
   const payload = {
     user: {
-      id: user.user_id,
+      id: user.id,
       username: user.username,
       email: user.email,
-      is_staff: user.is_staff,
-      is_superuser: user.is_superuser,
+      is_admin: user.is_admin,
+      is_superuser: user.is_super_admin,
     },
   };
 

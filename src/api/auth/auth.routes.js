@@ -14,9 +14,11 @@ router.post(
 
 router.post(
   "/register",
-  // authLimiter.registerRateLimiter,
+  authLimiter.registerRateLimiter,
   validate(authValidation.register),
   authController.register
 );
+
+router.get("/me", authController.me);
 
 module.exports = router;
