@@ -1,8 +1,8 @@
 const express = require("express");
 const auth = require("./auth/auth.routes");
-const account = require("./account/account.routes");
 const users = require("./users/users.routes");
-const products = require("./products/products.routes");
+const user = require("./user/user.routes");
+const exams = require("./exams/exams.routes");
 
 const router = express.Router();
 
@@ -13,8 +13,10 @@ router.get("/", (req, res) => {
 });
 
 router.use("/auth", auth);
-router.use("/account", account);
+router.use("/exams", exams);
+router.use("/user", user);
+
+// TODO: create sa routes
 router.use("/users", users);
-router.use("/products", products);
 
 module.exports = router;
