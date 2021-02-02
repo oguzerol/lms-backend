@@ -1,10 +1,10 @@
 const supertest = require("supertest");
 const app = require("../../app");
 
-describe("GET /api/v1/exams", () => {
-  it("should respond with an array of exams", async () => {
+describe("GET /api/v1/products", () => {
+  it("should respond with an array of products", async () => {
     const response = await supertest(app)
-      .get("/api/v1/exams")
+      .get("/api/v1/products")
       .expect("Content-type", /json/)
       .expect(200);
 

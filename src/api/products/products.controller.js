@@ -2,8 +2,8 @@ import to from "await-to-js";
 
 import Exam from "../../models/exam";
 
-export async function exams(_, res) {
-  const [err, exams] = await to(
+export async function products(_, res) {
+  const [err, products] = await to(
     Exam.query().select("name", "description", "price")
   );
 
@@ -15,5 +15,5 @@ export async function exams(_, res) {
     });
   }
 
-  res.json(exams);
+  res.json(products);
 }

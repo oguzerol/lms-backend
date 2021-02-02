@@ -8,8 +8,8 @@ GET {{host}}/api/v1
 ### Get Users
 GET {{host}}/api/v1/users
 
-### Get Exams
-GET {{host}}/api/v1/exams
+### Get Products
+GET {{host}}/api/v1/products
 
 ### Login sa
 POST {{host}}/api/v1/auth/login
