@@ -1,5 +1,6 @@
 @host =http://localhost:7000
 
+
 GET {{host}}
 
 ### Get Api
@@ -11,6 +12,7 @@ GET {{host}}/api/v1/users
 ### Get Products
 GET {{host}}/api/v1/products
 
+
 ### Login sa
 POST {{host}}/api/v1/auth/login
 Content-Type: application/json
@@ -21,6 +23,7 @@ Content-Type: application/json
 }
 
 ### Register
+
 POST {{host}}/api/v1/auth/register
 Content-Type: application/json
 
@@ -29,3 +32,11 @@ Content-Type: application/json
     "password": "010203asd",
     "username": "oguztest1"
 }
+
+### Auth Me
+GET {{host}}/api/v1/auth/me
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MTIzMDE5MTUsImV4cCI6MTYxMjMyMzUxNX0.YvNlS9AfFNvHGRF1wYy_I3x8WHetl8mknoUjT8kOubU
+
+### Auth Me
+GET {{host}}/api/v1/account/me
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MTIzMDE5MTUsImV4cCI6MTYxMjMyMzUxNX0.YvNlS9AfFNvHGRF1wYy_I3x8WHetl8mknoUjT8kOubU
