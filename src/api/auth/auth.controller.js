@@ -1,7 +1,7 @@
 import to from "await-to-js";
 import bcrypt from "bcrypt";
 import jwtGenerator from "../../utils/jwtGenerator";
-import User from "../users/users.model";
+import User from "../../models/user";
 import jwt from "jsonwebtoken";
 
 const errorMessages = {
@@ -46,7 +46,7 @@ export async function register(req, res) {
   const [err, existingEmail] = await to(User.query().where({ email }).first());
 
   if (err) {
-    return res.status(400).json({
+    return res.status(503).json({
       status: false,
       message: errorMessages.dbError,
       stack: err.message,
@@ -65,7 +65,7 @@ export async function register(req, res) {
   );
 
   if (existingErr) {
-    return res.status(400).json({
+    return res.status(503).json({
       status: false,
       message: errorMessages.dbError,
       stack: err.message,

@@ -69,7 +69,7 @@ exports.up = async (knex) => {
   await knex.schema.createTable(tableNames.answers, (table) => {
     table.increments().notNullable();
     table.string("label").notNullable();
-    table.text("content"); // not nullable
+    table.text("content"); // TODO : not nullable update seeded exam
     table.boolean("is_correct").notNullable();
     references(table, tableNames.exams);
     references(table, tableNames.questions);
