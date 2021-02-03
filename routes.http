@@ -40,7 +40,7 @@ Content-Type: application/json
 
 ### Auth Me
 GET {{host}}/api/v1/auth/me
-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MTIzMDE5MTUsImV4cCI6MTYxMjMyMzUxNX0.YvNlS9AfFNvHGRF1wYy_I3x8WHetl8mknoUjT8kOubU
+Token:  eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MTIzODQ2NzksImV4cCI6MTYxMjQwNjI3OX0.fy81LjNckN-9M0znLtJAHz5AqHTSaJcBSLMUBzNVTMs
 
 ### Auth Me
 GET {{host}}/api/v1/user/account/me

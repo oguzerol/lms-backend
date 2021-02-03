@@ -1,4 +1,5 @@
 import express from "express";
+
 import account from "./account/account.routes";
 import exams from "./exams/exams.routes";
 import authorization from "../../utils/authorization";

@@ -1,11 +1,10 @@
 import to from "await-to-js";
 
-import Exam from "../../../models/exam";
+import User from "../../../models/user";
 
 export async function exams(_, res) {
-  const [err, exams] = await to(
-    Exam.query().select("name", "description", "price")
-  );
+  const [err, exams] = await to(User.relatedQuery("exams").for(1));
+  console.log(exams);
 
   if (err) {
     return res.status(503).json({

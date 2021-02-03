@@ -36,4 +36,23 @@ export default class User extends Model {
       },
     };
   }
+
+  static get relationMappings() {
+    const Exam = require("./exam").default;
+
+    return {
+      exams: {
+        relation: Model.ManyToManyRelation,
+        modelClass: Exam,
+        join: {
+          from: `${tableNames.users}.id`,
+          through: {
+            from: `${tableNames.userExams}.user_id`,
+            to: `${tableNames.userExams}.exam_id`,
+          },
+          to: `${tableNames.exams}.id`,
+        },
+      },
+    };
+  }
 }
