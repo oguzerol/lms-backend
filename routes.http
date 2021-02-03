@@ -15,6 +15,7 @@ GET {{host}}/api/v1/exams
 
 ### Get User Exams
 GET {{host}}/api/v1/user/exams
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MTIzODQ2NzksImV4cCI6MTYxMjQwNjI3OX0.fy81LjNckN-9M0znLtJAHz5AqHTSaJcBSLMUBzNVTMs
 
 
 ### Login sa
