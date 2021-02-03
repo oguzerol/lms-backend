@@ -50,8 +50,6 @@ exports.up = async (knex) => {
     table.timestamp("standalone_start_time");
     table.timestamp("standalone_end_time");
     table.integer("standalone_status");
-    table.json("exam").notNullable();
-    table.json("answers").notNullable().defaultTo('{"data": []}');
     references(table, tableNames.exams);
     references(table, tableNames.users);
     addDefaultColumns(knex, table);

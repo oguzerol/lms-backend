@@ -36,7 +36,7 @@ exports.seed = async (knex) => {
     is_super_admin: true,
   };
 
-  await knex(tableNames.users).insert([sa]);
+  const userId = await knex(tableNames.users).insert([sa], "id");
 
   const data = fs.readFileSync(
     process.cwd() + "/src/constants/exam_sample.xlsx"
@@ -83,4 +83,8 @@ exports.seed = async (knex) => {
 
     await knex(tableNames.answers).insert(answers);
   }
+  await knex(tableNames.userExams).insert({
+    exam_id: examId[0],
+    user_id: userId[0],
+  });
 };
