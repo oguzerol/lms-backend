@@ -1,3 +1,5 @@
+import authorization from "../utils/authorization";
+
 const express = require("express");
 const auth = require("./auth/auth.routes");
 const users = require("./users/users.routes");
@@ -14,7 +16,7 @@ router.get("/", (req, res) => {
 
 router.use("/auth", auth);
 router.use("/exams", exams);
-router.use("/user", user);
+router.use("/user", authorization, user);
 
 // TODO: create sa routes
 router.use("/users", users);

@@ -42,7 +42,7 @@ export default class User extends Model {
 
     return {
       exams: {
-        relation: Model.ManyToManyRelation,
+        relation: Model.HasOneThroughRelation,
         modelClass: Exam,
         join: {
           from: `${tableNames.users}.id`,

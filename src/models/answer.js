@@ -1,6 +1,6 @@
 import { Model } from "objection";
 
-import tableNames from "../../constants/tableNames";
+import tableNames from "../constants/tableNames";
 
 export default class Answer extends Model {
   static get tableName() {
@@ -25,8 +25,8 @@ export default class Answer extends Model {
   }
 
   static get relationMappings() {
-    const Exam = require("/exam");
-    const Question = require("/question");
+    const Exam = require("./exam");
+    const Question = require("./question");
 
     return {
       exam: {

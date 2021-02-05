@@ -36,7 +36,7 @@ export default class Exam extends Model {
   }
 
   static get relationMappings() {
-    const Question = require("/question");
+    const Question = require("./question");
     const Answer = require("./answer");
 
     return {
