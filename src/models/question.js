@@ -1,10 +1,10 @@
 import { Model } from "objection";
 
-import tableNames from "../constants/tableNames;
+import tableNames from "../constants/tableNames";
 
 export default class Question extends Model {
   static get tableName() {
-    return tableNames.answers;
+    return tableNames.questions;
   }
 
   static get jsonSchema() {
@@ -25,15 +25,15 @@ export default class Question extends Model {
   }
 
   static get relationMappings() {
-    const Exam = require("./exam");
+    const Answer = require("./answer").default;
 
     return {
-      exam: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Exam,
+      answers: {
+        relation: Model.HasManyRelation,
+        modelClass: Answer,
         join: {
-          from: `${tableNames.questions}.exam_id`,
-          to: `${tableNames.exams}.id`,
+          from: `${tableNames.questions}.id`,
+          to: `${tableNames.answers}.question_id`,
         },
       },
     };

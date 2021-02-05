@@ -54,6 +54,7 @@ export async function enroll(req, res) {
       .where("exam_id", id)
       .first()
   );
+
   if (purchasedExamErr) {
     return res.status(503).json({
       status: false,

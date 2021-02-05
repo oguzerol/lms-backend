@@ -25,18 +25,9 @@ export default class Answer extends Model {
   }
 
   static get relationMappings() {
-    const Exam = require("./exam");
     const Question = require("./question");
 
     return {
-      exam: {
-        relation: Model.BelongsToOneRelation,
-        modelClass: Exam,
-        join: {
-          from: `${tableNames.answers}.answer_id`,
-          to: `${tableNames.exams}.id`,
-        },
-      },
       question: {
         relation: Model.BelongsToOneRelation,
         modelClass: Question,
