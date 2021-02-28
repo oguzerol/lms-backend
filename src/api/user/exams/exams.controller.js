@@ -7,9 +7,7 @@ import Exam from "../../../models/exam";
 export async function exams(req, res) {
   const user_id = req.user.id;
 
-  const [err, exams] = await to(
-    User.relatedQuery(tablaNames.exams).for(user_id)
-  );
+  const [err, exams] = await to(User.relatedQuery("exams").for(user_id));
 
   if (err) {
     return res.status(503).json({
