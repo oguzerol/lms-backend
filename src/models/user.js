@@ -39,10 +39,23 @@ export default class User extends Model {
 
   static get relationMappings() {
     const UserExam = require("./user_exam").default;
+    const Exam = require("./exam").default;
 
     return {
       exams: {
-        relation: Model.HasOneRelation,
+        relation: Model.HasOneThroughRelation,
+        modelClass: Exam,
+        join: {
+          from: `${tableNames.users}.id`,
+          through: {
+            from: `${tableNames.userExams}.user_id`,
+            to: `${tableNames.userExams}.exam_id`,
+          },
+          to: `${tableNames.exams}.id`,
+        },
+      },
+      userExams: {
+        relation: Model.HasManyRelation,
         modelClass: UserExam,
         join: {
           from: `${tableNames.users}.id`,

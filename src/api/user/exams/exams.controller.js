@@ -3,11 +3,18 @@ import tableNames from "../../../constants/tableNames";
 
 import User from "../../../models/user";
 import Exam from "../../../models/exam";
+import UserExam from "../../../models/user_exam";
 
 export async function exams(req, res) {
   const user_id = req.user.id;
 
-  const [err, exams] = await to(User.relatedQuery("exams").for(user_id));
+  const [err, exams] = await to(
+    UserExam.query()
+      .where("user_id", user_id)
+      .select("")
+      .withGraphJoined("exams")
+      .where("exams.name", "Sample Exam")
+  );
 
   if (err) {
     return res.status(503).json({
@@ -52,7 +59,6 @@ export async function exam(req, res) {
       .for(user_id)
       .where({ exam_id })
       .select("name", "description")
-      .first()
       .withGraphFetched(
         `${tableNames.questions}(questionFields).${tableNames.answers}(answerFields)`
       )

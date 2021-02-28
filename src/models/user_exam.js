@@ -2,7 +2,7 @@ import { Model } from "objection";
 
 import tableNames from "../constants/tableNames";
 
-export default class Exam extends Model {
+export default class UserExam extends Model {
   static get tableName() {
     return tableNames.userExams;
   }
@@ -21,6 +21,20 @@ export default class Exam extends Model {
         created_at: { type: "timestamp" },
         updated_at: { type: "timestamp" },
         deleted_at: { type: ["timestamp", "null"] },
+      },
+    };
+  }
+  static get relationMappings() {
+    const Exam = require("./exam").default;
+
+    return {
+      exams: {
+        relation: Model.HasOneRelation,
+        modelClass: Exam,
+        join: {
+          from: `${tableNames.userExams}.exam_id`,
+          to: `${tableNames.exams}.id`,
+        },
       },
     };
   }
