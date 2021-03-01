@@ -7,14 +7,29 @@ import UserExam from "../../../models/user_exam";
 
 export async function exams(req, res) {
   const user_id = req.user.id;
+  const { type } = req.query;
+  console.log(type);
 
-  const [err, exams] = await to(
-    UserExam.query()
+  let dbQuery = UserExam.query()
+    .where("user_id", user_id)
+    .select("")
+    .withGraphJoined("exams as info");
+
+  if (type === "undone") {
+    dbQuery = UserExam.query()
       .where("user_id", user_id)
+      .where("standalone_status", null)
       .select("")
-      .withGraphJoined("exams")
-      .where("exams.name", "Sample Exam")
-  );
+      .withGraphJoined("exams as info");
+  }
+  if (type === "done") {
+    dbQuery = UserExam.query()
+      .where("user_id", user_id)
+      .where("standalone_status", 2)
+      .select("")
+      .withGraphJoined("exams as info");
+  }
+  const [err, exams] = await to(dbQuery);
 
   if (err) {
     return res.status(503).json({
