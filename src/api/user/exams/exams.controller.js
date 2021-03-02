@@ -145,10 +145,7 @@ export async function startExam(req, res) {
 
   if (activeExam.length > 0) {
     if (activeExam[0].exam_id === parseFloat(exam_id)) {
-      return res.status(409).json({
-        status: false,
-        error: "Bu sınava daha önce başladınız.",
-      });
+      return exam(req, res);
     } else {
       return res.status(409).json({
         status: false,
@@ -184,10 +181,7 @@ export async function startExam(req, res) {
   }
 
   if (isExamStarted) {
-    return res.status(302).json({
-      status: false,
-      exam: { id: examExist.exam_id },
-    });
+    return exam(req, res);
   }
 
   // Update exam status and times
@@ -206,10 +200,5 @@ export async function startExam(req, res) {
       standalone_status: 1,
     });
 
-  console.log("upd", updatedExam);
-
-  return res.json({
-    status: true,
-    exam: { id: updatedExam.exam_id },
-  });
+  return exam(req, res);
 }
