@@ -13,13 +13,18 @@ const api = require("./api/api.routes");
 Model.knex(connection);
 
 const app = express();
-const http = require("http").Server(app);
-const io = require("socket.io")(http);
 
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
+
+const http = require("http").Server(app);
+const io = require("socket.io")(http, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
 
 app.get("/", (req, res) => {
   res.json({
@@ -34,8 +39,10 @@ app.use(middlewares.errorHandler);
 
 io.on("connection", (socket) => {
   console.log("a user connected");
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
 });
-
 const port = process.env.PORT || 7000;
 http.listen(port, () => {
   /* eslint-disable no-console */
