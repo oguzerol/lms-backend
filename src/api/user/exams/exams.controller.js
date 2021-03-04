@@ -1,12 +1,22 @@
 import to from "await-to-js";
 import moment from "moment";
 import tableNames from "../../../constants/tableNames";
+const socket = require("../../../sio");
 
 import User from "../../../models/user";
 import Exam from "../../../models/exam";
 import UserExam from "../../../models/user_exam";
 
 export async function exams(req, res) {
+  const io = socket.getInstance();
+  io.on("connection", async (socket) => {
+    socket.join(1);
+
+    // and then later
+    io.to(1).emit("test");
+    socket.disconnect(true);
+  });
+
   const user_id = req.user.id;
   const { type } = req.query;
 

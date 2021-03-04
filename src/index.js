@@ -20,11 +20,7 @@ app.use(cors());
 app.use(express.json());
 
 const http = require("http").Server(app);
-const io = require("socket.io")(http, {
-  cors: {
-    origin: "http://localhost:3000",
-  },
-});
+require("./sio").initialize(http);
 
 app.get("/", (req, res) => {
   res.json({
@@ -37,12 +33,6 @@ app.use("/api/v1", api);
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
 
-io.on("connection", (socket) => {
-  console.log("a user connected");
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
-});
 const port = process.env.PORT || 7000;
 http.listen(port, () => {
   /* eslint-disable no-console */
