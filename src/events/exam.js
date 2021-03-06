@@ -1,26 +1,28 @@
 import { EventEmitter } from "events";
+
 const timers = {};
 
 const examEvents = new EventEmitter();
 
 function onExamStart(user_id, exam_id) {
-  console.log("sinav basladi", user_id, exam_id);
-
   timers[user_id] = setTimeout(() => {
-    console.log("sinav bitti");
-    // Send message via io
-  }, 2000);
-
-  // if (typeof timers[socket.id] !== "undefined") {
-  //   clearTimeout(timers[socket.id]);
-  // }
-
-  // console.log("yeee", data);
-  // timers[user_id] = setTimeout(() => {
-  //   console.log("sinav bitti");
-  //   io.to(user_id).emit("end-exam");
-  // }, 2000);
+    onExamEnd(user_id, exam_id);
+  }, 3000);
+  // console.log("start timers", timers);
 }
+
+function onExamEnd(user_id, exam_id) {
+  console.log("sinav sona erdi", user_id, exam_id);
+  // TODO: Update db
+  // TODO: send socket message to close user screen
+  clearTimeout(timers[user_id]);
+  console.log("end timers", timers[user_id]);
+  delete timers[user_id];
+}
+
+// export function emitExamEnd(user_id, exam_id) {
+//   examEvents.emit("examEnd", user_id, exam_id);
+// }
 
 export function emitExamStart(user_id, exam_id) {
   examEvents.emit("examStart", user_id, exam_id);
@@ -31,4 +33,5 @@ export function registerEvents() {
   examEvents.on("examStart", (user_id, exam_id) =>
     onExamStart(user_id, exam_id)
   );
+  // examEvents.on("examEnd", (user_id, exam_id) => onExamEnd(user_id, exam_id));
 }
