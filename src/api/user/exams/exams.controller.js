@@ -1,22 +1,11 @@
 import to from "await-to-js";
 import moment from "moment";
 import tableNames from "../../../constants/tableNames";
-const socket = require("../../../sio");
-
 import User from "../../../models/user";
-import Exam from "../../../models/exam";
 import UserExam from "../../../models/user_exam";
+import { emitExamStart } from "../../../events/exam";
 
 export async function exams(req, res) {
-  const io = socket.getInstance();
-  io.on("connection", async (socket) => {
-    socket.join(1);
-
-    // and then later
-    io.to(1).emit("test");
-    socket.disconnect(true);
-  });
-
   const user_id = req.user.id;
   const { type } = req.query;
 
@@ -108,6 +97,7 @@ export async function exam(req, res) {
     });
   }
 
+  emitExamStart(user_id, exam_id);
   res.json(exam);
 }
 
@@ -115,8 +105,6 @@ export async function startExam(req, res) {
   const now = moment();
   const { id: exam_id } = req.params;
   const user_id = req.user.id;
-
-  console.log(req.params);
 
   // check exam id is given
   if (![exam_id].every(Boolean)) {
@@ -201,14 +189,57 @@ export async function startExam(req, res) {
   // 1 is active
   // 2 is finished
 
+  // // TODO: error check
+  // const updatedExam = await UserExam.query()
+  //   .where("user_id", user_id)
+  //   .where("exam_id", exam_id)
+  //   .patch({
+  //     standalone_start_time: moment().format(),
+  //     standalone_end_time: moment().add(3, "hours").format(),
+  //     standalone_status: 1,
+  //   });
+
+  return exam(req, res);
+}
+
+export async function endExam(req, res) {
+  const { id: exam_id } = req.params;
+  const user_id = req.user.id;
+
+  // check exam id is given
+  if (![exam_id].every(Boolean)) {
+    return res.json("Exam id yok");
+  }
+
+  // Check if user has the exam
+  const [examExistErr, examExist] = await to(
+    UserExam.query().where("user_id", user_id).where("exam_id", exam_id).first()
+  );
+
+  if (examExistErr) {
+    return res.status(503).json({
+      status: false,
+      message: "Bir hata oluştu.",
+      stack: examExistErr.message,
+    });
+  }
+
+  if (!examExist) {
+    return res.status(409).json({
+      status: false,
+      message: "Bu sınav yok veya bu sınava sahip değilsiniz.",
+    });
+  }
+
   const updatedExam = await UserExam.query()
     .where("user_id", user_id)
     .where("exam_id", exam_id)
     .patch({
-      standalone_start_time: moment().format(),
-      standalone_end_time: moment().add(3, "hours").format(),
-      standalone_status: 1,
+      standalone_status: 2,
     });
 
-  return exam(req, res);
+  return res.json({
+    status: true,
+    exam: { id: exam_id },
+  });
 }

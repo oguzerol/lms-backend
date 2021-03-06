@@ -3,6 +3,7 @@ import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 import { Model } from "objection";
+import { registerEvents } from "./events/exam";
 
 require("dotenv").config();
 
@@ -20,7 +21,7 @@ app.use(cors());
 app.use(express.json());
 
 const http = require("http").Server(app);
-require("./sio").initialize(http);
+require("./socket").initialize(http);
 
 app.get("/", (req, res) => {
   res.json({
@@ -32,6 +33,8 @@ app.use("/api/v1", api);
 
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
+
+registerEvents();
 
 const port = process.env.PORT || 7000;
 http.listen(port, () => {
