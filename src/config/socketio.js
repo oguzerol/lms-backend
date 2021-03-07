@@ -48,6 +48,8 @@ export default function (socketio, app) {
   });
 
   socketio.on("connection", function (socket) {
+    const userId = socket.handshake.auth.userId;
+    socket.join(userId);
     // Call onDisconnect.
     socket.on("disconnect", () => {
       onDisconnect(socket);
