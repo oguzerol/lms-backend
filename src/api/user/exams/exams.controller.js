@@ -102,6 +102,8 @@ export async function exam(req, res) {
 }
 
 export async function startExam(req, res) {
+  console.log(req);
+
   const now = moment();
   const { id: exam_id } = req.params;
   const user_id = req.user.id;
@@ -203,6 +205,7 @@ export async function startExam(req, res) {
 }
 
 export async function endExam(req, res) {
+  console.log(req);
   const { id: exam_id } = req.params;
   const user_id = req.user.id;
 

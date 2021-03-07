@@ -1,9 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import helmet from "helmet";
+import http from "http";
 import cors from "cors";
 import { Model } from "objection";
 import { registerEvents } from "./events/exam";
+const socket = require("socket.io");
 
 require("dotenv").config();
 
@@ -15,13 +17,23 @@ Model.knex(connection);
 
 const app = express();
 
+const server = http.createServer(app);
+const socketio = socket(server, {
+  cors: {
+    origin: "http://localhost:3000",
+  },
+});
+
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-const http = require("http").Server(app);
-require("./socket").initialize(http);
+// SocketIO configuration
+require("./config/socketio").default(socketio, app);
+
+// Register Events.
+registerEvents();
 
 app.get("/", (req, res) => {
   res.json({
@@ -34,10 +46,9 @@ app.use("/api/v1", api);
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
 
-registerEvents();
-
 const port = process.env.PORT || 7000;
-http.listen(port, () => {
+
+server.listen(port, () => {
   /* eslint-disable no-console */
   console.log(`Listening: http://localhost:${port}`);
   /* eslint-enable no-console */
