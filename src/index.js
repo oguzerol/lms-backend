@@ -33,7 +33,7 @@ app.use(express.json());
 require("./config/socketio").default(socketio, app);
 
 // Register Events.
-registerEvents();
+registerEvents(socketio);
 
 app.get("/", (req, res) => {
   res.json({

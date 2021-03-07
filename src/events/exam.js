@@ -5,15 +5,16 @@ const timers = {};
 
 const examEvents = new EventEmitter();
 
-function onExamStart(user_id, exam_id) {
+function onExamStart(socketio, user_id, exam_id) {
   // console.log(timers[user_id]);
   timers[user_id] = setTimeout(() => {
+    console.log("test", socketio);
     onExamEnd(user_id, exam_id);
   }, 3000);
   // console.log("start timers", timers);
 }
 
-async function onExamEnd(user_id, exam_id) {
+async function onExamEnd(socketio, user_id, exam_id) {
   // console.log("sinav sona erdi", user_id, exam_id);
   // TODO: Update db
   // TODO: send socket message to close user screen
@@ -36,10 +37,10 @@ export function emitExamStart(user_id, exam_id) {
   examEvents.emit("examStart", user_id, exam_id);
 }
 
-export function registerEvents() {
+export function registerEvents(socketio) {
   // Register listeners
   examEvents.on("examStart", (user_id, exam_id) =>
-    onExamStart(user_id, exam_id)
+    onExamStart(socketio, user_id, exam_id)
   );
   // examEvents.on("examEnd", (user_id, exam_id) => onExamEnd(user_id, exam_id));
 }
