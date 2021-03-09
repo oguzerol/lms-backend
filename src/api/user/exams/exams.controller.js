@@ -4,32 +4,16 @@ import tableNames from "../../../constants/tableNames";
 import User from "../../../models/user";
 import UserExam from "../../../models/user_exam";
 import { emitExamStart } from "../../../events/exam";
+import { getUserAllExams } from "./exams.services";
+
+// TODO: Create service layer
+// TODO: Handle errors via try catch in just controller
 
 export async function exams(req, res) {
   const user_id = req.user.id;
   const { type } = req.query;
 
-  let dbQuery = UserExam.query()
-    .where("user_id", user_id)
-    .select("")
-    .withGraphJoined("exams as info");
-
-  if (type === "undone") {
-    dbQuery = UserExam.query()
-      .where("user_id", user_id)
-      .where("standalone_status", null)
-      .select("")
-      .withGraphJoined("exams as info");
-  }
-  if (type === "done") {
-    dbQuery = UserExam.query()
-      .where("user_id", user_id)
-      .where("standalone_status", 2)
-      .select("")
-      .withGraphJoined("exams as info");
-  }
-  const [err, exams] = await to(dbQuery);
-
+  const [err, exams] = await to(getUserAllExams(user_id, type));
   if (err) {
     return res.status(503).json({
       status: false,
@@ -40,6 +24,26 @@ export async function exams(req, res) {
 
   res.json(exams);
 }
+
+// const { email } = req.body;
+// const data = {
+//   from: 'cta',
+//   email,
+//   agent: req.useragent,
+//   data: {
+//     ...req.body,
+//   },
+// };
+
+// try {
+//   const lead = await leadService.addLead(data);
+//   leadEventHelper.emitLeadAdded(lead);
+
+//   res.status(200).send();
+// } catch (error) {
+//   next(error);
+//   return;
+// }
 
 export async function exam(req, res) {
   const { id: exam_id } = req.params;
