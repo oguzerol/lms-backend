@@ -7,6 +7,7 @@ import {
   getUserAllExams,
   checkUserHasExam,
   getUserExam,
+  getUserExams,
 } from "./exams.services";
 
 // TODO: Create service layer
@@ -27,26 +28,6 @@ export async function exams(req, res) {
 
   res.json(exams);
 }
-
-// const { email } = req.body;
-// const data = {
-//   from: 'cta',
-//   email,
-//   agent: req.useragent,
-//   data: {
-//     ...req.body,
-//   },
-// };
-
-// try {
-//   const lead = await leadService.addLead(data);
-//   leadEventHelper.emitLeadAdded(lead);
-
-//   res.status(200).send();
-// } catch (error) {
-//   next(error);
-//   return;
-// }
 
 export async function exam(req, res) {
   const { id: exam_id } = req.params;
@@ -93,7 +74,6 @@ export async function exam(req, res) {
 }
 
 export async function startExam(req, res) {
-  const now = moment();
   const { id: exam_id } = req.params;
   const user_id = req.user.id;
 
@@ -102,9 +82,9 @@ export async function startExam(req, res) {
     return res.json("Exam id yok");
   }
 
-  // Check if user has the exam
+  // Check if user has exam
   const [examExistErr, examExist] = await to(
-    UserExam.query().where("user_id", user_id).where("exam_id", exam_id).first()
+    checkUserHasExam(user_id, exam_id)
   );
 
   if (examExistErr) {
@@ -123,13 +103,18 @@ export async function startExam(req, res) {
   }
 
   // check user has already active exam
-  const [examActiveErr, examActive] = await to(
-    UserExam.query().where("user_id", user_id).where("exam_id", exam_id)
-  );
-  const activeExam = examActive.filter(
-    (exam) =>
-      exam.standalone_end_time &&
-      !(now.isAfter(exam.standalone_end_time) || exam.standalone_status === 2)
+  const [userExamsErr, userExams] = await to(getUserExams(user_id));
+  if (userExamsErr) {
+    return res.status(503).json({
+      status: false,
+      message: "Bir hata oluştu.",
+      stack: examExistErr.message,
+    });
+  }
+
+  // TODO: from db
+  const activeExam = userExams.filter(
+    (exam) => exam.standalone_start_time && exam.standalone_status !== 2
   );
 
   if (activeExam.length > 0) {
@@ -156,7 +141,6 @@ export async function startExam(req, res) {
   // }
 
   // check is already finished or started
-  const isExamStarted = examExist.standalone_end_time !== null;
   const isExamFinished =
     examExist.standalone_status === 2 ||
     (examExist.standalone_end_time !== null &&
@@ -169,10 +153,6 @@ export async function startExam(req, res) {
     });
   }
 
-  if (isExamStarted) {
-    return exam(req, res);
-  }
-
   // Update exam status and times
 
   // status
@@ -180,15 +160,15 @@ export async function startExam(req, res) {
   // 1 is active
   // 2 is finished
 
-  // // TODO: error check
-  // const updatedExam = await UserExam.query()
-  //   .where("user_id", user_id)
-  //   .where("exam_id", exam_id)
-  //   .patch({
-  //     standalone_start_time: moment().format(),
-  //     standalone_end_time: moment().add(3, "hours").format(),
-  //     standalone_status: 1,
-  //   });
+  // TODO: error check
+  const updatedExam = await UserExam.query()
+    .where("user_id", user_id)
+    .where("exam_id", exam_id)
+    .patch({
+      standalone_start_time: moment().format(),
+      standalone_end_time: moment().add(3, "hours").format(),
+      standalone_status: 1,
+    });
 
   return exam(req, res);
 }

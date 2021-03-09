@@ -9,6 +9,10 @@ export async function checkUserHasExam(user_id, exam_id) {
     .first();
 }
 
+export async function getUserExams(user_id) {
+  return UserExam.query().where("user_id", user_id);
+}
+
 export async function getUserAllExams(user_id, type) {
   let dbQuery = UserExam.query()
     .where("user_id", user_id)
