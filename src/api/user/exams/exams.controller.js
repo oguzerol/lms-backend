@@ -1,10 +1,13 @@
 import to from "await-to-js";
 import moment from "moment";
-import tableNames from "../../../constants/tableNames";
-import User from "../../../models/user";
+
 import UserExam from "../../../models/user_exam";
 import { emitExamStart } from "../../../events/exam";
-import { getUserAllExams } from "./exams.services";
+import {
+  getUserAllExams,
+  checkUserHasExam,
+  getUserExam,
+} from "./exams.services";
 
 // TODO: Create service layer
 // TODO: Handle errors via try catch in just controller
@@ -57,8 +60,9 @@ export async function exam(req, res) {
 
   // Check if user has exam
   const [examExistErr, examExist] = await to(
-    UserExam.query().where("user_id", user_id).where("exam_id", exam_id).first()
+    checkUserHasExam(user_id, exam_id)
   );
+
   if (examExistErr) {
     return res.status(503).json({
       status: false,
@@ -74,24 +78,7 @@ export async function exam(req, res) {
     });
   }
 
-  const [err, exam] = await to(
-    User.relatedQuery(tableNames.exams)
-      .for(user_id)
-      .where({ exam_id })
-      .select("name", "description")
-      .withGraphFetched(
-        `${tableNames.questions}(questionFields).${tableNames.answers}(answerFields)`
-      )
-      .modifiers({
-        questionFields: (builder) => {
-          builder.select("id", "type", "info", "content");
-        },
-
-        answerFields: (builder) => {
-          builder.select("id", "label", "content");
-        },
-      })
-  );
+  const [err, exam] = await to(getUserExam(user_id, exam_id));
 
   if (err) {
     return res.status(503).json({
