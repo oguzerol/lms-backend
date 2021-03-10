@@ -8,6 +8,8 @@ import {
   checkUserHasExam,
   getUserExam,
   getUserExams,
+  startUserExam,
+  endUserExam,
 } from "./exams.services";
 
 // TODO: Create service layer
@@ -112,7 +114,7 @@ export async function startExam(req, res) {
     });
   }
 
-  // TODO: from db
+  // TODO: via db
   const activeExam = userExams.filter(
     (exam) => exam.standalone_start_time && exam.standalone_status !== 2
   );
@@ -160,15 +162,14 @@ export async function startExam(req, res) {
   // 1 is active
   // 2 is finished
 
-  // TODO: error check
-  const updatedExam = await UserExam.query()
-    .where("user_id", user_id)
-    .where("exam_id", exam_id)
-    .patch({
-      standalone_start_time: moment().format(),
-      standalone_end_time: moment().add(3, "hours").format(),
-      standalone_status: 1,
+  const updatedExam = await startUserExam(user_id, exam_id);
+
+  if (!(updatedExam instanceof UserExam)) {
+    return res.status(400).json({
+      status: false,
+      message: "Validasyon hatası",
     });
+  }
 
   return exam(req, res);
 }
@@ -182,9 +183,9 @@ export async function endExam(req, res) {
     return res.json("Exam id yok");
   }
 
-  // Check if user has the exam
+  // Check if user has exam
   const [examExistErr, examExist] = await to(
-    UserExam.query().where("user_id", user_id).where("exam_id", exam_id).first()
+    checkUserHasExam(user_id, exam_id)
   );
 
   if (examExistErr) {
@@ -198,16 +199,13 @@ export async function endExam(req, res) {
   if (!examExist) {
     return res.status(409).json({
       status: false,
-      message: "Bu sınav yok veya bu sınava sahip değilsiniz.",
+      message: "Böyle bir sınav yok.",
     });
   }
 
-  const updatedExam = await UserExam.query()
-    .where("user_id", user_id)
-    .where("exam_id", exam_id)
-    .patch({
-      standalone_status: 2,
-    });
+  const updatedExam = await endUserExam(user_id, exam_id);
+
+  console.log(typeof updatedExam);
 
   return res.json({
     status: true,

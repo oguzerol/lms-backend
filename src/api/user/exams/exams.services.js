@@ -1,6 +1,7 @@
 import User from "../../../models/user";
 import UserExam from "../../../models/user_exam";
 import tableNames from "../../../constants/tableNames";
+import moment from "moment";
 
 export async function checkUserHasExam(user_id, exam_id) {
   return UserExam.query()
@@ -52,5 +53,25 @@ export async function getUserExam(user_id, exam_id) {
       answerFields: (builder) => {
         builder.select("id", "label", "content");
       },
+    });
+}
+
+export async function startUserExam(user_id, exam_id) {
+  return await UserExam.query()
+    .where("user_id", user_id)
+    .where("exam_id", exam_id)
+    .patch({
+      standalone_start_time: moment().format(),
+      standalone_end_time: moment().add(3, "hours").format(),
+      standalone_status: 1,
+    });
+}
+
+export async function endUserExam(user_id, exam_id) {
+  return await UserExam.query()
+    .where("user_id", user_id)
+    .where("exam_id", exam_id)
+    .patch({
+      standalone_status: 2,
     });
 }

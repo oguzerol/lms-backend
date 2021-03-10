@@ -7,20 +7,17 @@ const timers = {};
 const examEvents = new EventEmitter();
 
 function onExamStart(socketio, user_id, exam_id) {
-  console.log("huko");
+  console.log("sinav basladi 15 saniye sonra bitmesi lazim", user_id);
   socketio.to(user_id).sockets.emit("end-exam");
 
-  // console.log(socketio);
-  // console.log(timers[user_id]);
-  // timers[user_id] = setTimeout(() => {
-  //   // console.log("test", socketio);
-  //   onExamEnd(user_id, exam_id);
-  // }, 3000);
-  // console.log("start timers", timers);
+  timers[user_id] = setTimeout(() => {
+    onExamEnd(user_id, exam_id);
+  }, 15000);
 }
 
 async function onExamEnd(socketio, user_id, exam_id) {
-  // console.log("sinav sona erdi", user_id, exam_id);
+  console.log("15 saniye  cagirildi sinav bitti", user_id);
+
   // TODO: Update db
   // TODO: send socket message to close user screen
   // await UserExam.query()
