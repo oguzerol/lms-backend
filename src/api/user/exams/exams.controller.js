@@ -164,12 +164,7 @@ export async function startExam(req, res) {
 
   const updatedExam = await startUserExam(user_id, exam_id);
 
-  if (!(updatedExam instanceof UserExam)) {
-    return res.status(400).json({
-      status: false,
-      message: "Validasyon hatası",
-    });
-  }
+  console.log("teeeest", updatedExam);
 
   return exam(req, res);
 }
@@ -204,8 +199,6 @@ export async function endExam(req, res) {
   }
 
   const updatedExam = await endUserExam(user_id, exam_id);
-
-  console.log(typeof updatedExam);
 
   return res.json({
     status: true,

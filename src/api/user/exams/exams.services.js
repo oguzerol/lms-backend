@@ -4,14 +4,14 @@ import tableNames from "../../../constants/tableNames";
 import moment from "moment";
 
 export async function checkUserHasExam(user_id, exam_id) {
-  return UserExam.query()
+  return await UserExam.query()
     .where("user_id", user_id)
     .where("exam_id", exam_id)
     .first();
 }
 
 export async function getUserExams(user_id) {
-  return UserExam.query().where("user_id", user_id);
+  return await UserExam.query().where("user_id", user_id);
 }
 
 export async function getUserAllExams(user_id, type) {
