@@ -37,6 +37,7 @@ export default class Exam extends Model {
 
   static get relationMappings() {
     const Question = require("./question").default;
+    const UserExam = require("./user_exam").default;
 
     return {
       questions: {
@@ -45,6 +46,14 @@ export default class Exam extends Model {
         join: {
           from: `${tableNames.exams}.id`,
           to: `${tableNames.questions}.exam_id`,
+        },
+      },
+      user_exams: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: UserExam,
+        join: {
+          from: `${tableNames.exams}.id`,
+          to: `${tableNames.userExams}.exam_id`,
         },
       },
     };

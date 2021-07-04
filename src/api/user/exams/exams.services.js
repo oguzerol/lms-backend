@@ -38,18 +38,22 @@ export async function getUserAllExams(user_id, type) {
 }
 
 export async function getUserExam(user_id, exam_id) {
+  // TODO: Just return valid ones
+  // TODO: Is User or UserExam ??
   return await User.relatedQuery(tableNames.exams)
     .for(user_id)
     .where({ exam_id })
     .select("name", "description")
     .withGraphFetched(
-      `${tableNames.questions}(questionFields).${tableNames.answers}(answerFields)`
+      `[${tableNames.questions}(questionFields).${tableNames.answers}(answerFields), ${tableNames.userExams}(userExamFields)]`
     )
     .modifiers({
+      userExamFields: (builder) => {
+        builder.select("standalone_end_time");
+      },
       questionFields: (builder) => {
         builder.select("id", "type", "info", "content");
       },
-
       answerFields: (builder) => {
         builder.select("id", "label", "content");
       },

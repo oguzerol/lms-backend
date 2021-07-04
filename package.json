@@ -11,9 +11,9 @@
     "rollback": "knex migrate:rollback",
     "seed": "knex seed:run",
     "test": "jest --coverage",
-    "backshell": "docker exec -it backend_backend_1 sh",
+    "backshell": "docker exec -it lms-backend_backend_1 sh",
     "dockerdevstart": "docker-compose --env-file ./config/enviroment/.development up  -d --build",
-    "backlog": "docker logs backend_backend_1  -f --tail 500",
+    "backlog": "docker logs lms-backend_backend_1  -f --tail 500",
     "pglog": "docker logs backend_postgres_1  -f --tail 500"
   },
   "keywords": [],

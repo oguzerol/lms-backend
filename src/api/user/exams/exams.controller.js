@@ -66,7 +66,7 @@ export async function exam(req, res) {
   if (err) {
     return res.status(503).json({
       status: false,
-      message: "Sınavlar getirilirken bir hata oluştu.",
+      message: "Sınav getirilirken bir hata oluştu.",
       stack: err.message,
     });
   }
@@ -162,9 +162,7 @@ export async function startExam(req, res) {
   // 1 is active
   // 2 is finished
 
-  const updatedExam = await startUserExam(user_id, exam_id);
-
-  console.log("teeeest", updatedExam);
+  await startUserExam(user_id, exam_id);
 
   return exam(req, res);
 }
