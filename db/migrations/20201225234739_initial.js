@@ -73,11 +73,19 @@ exports.up = async (knex) => {
     references(table, tableNames.questions);
     addDefaultColumns(knex, table);
   });
+
+  await knex.schema.createTable(tableNames.userAnswers, (table) => {
+    table.increments().notNullable();
+    references(table, tableNames.questions);
+    references(table, tableNames.answers);
+    addDefaultColumns(knex, table);
+  });
 };
 
 exports.down = async (knex) => {
   await Promise.all(
     [
+      tableNames.userAnswers,
       tableNames.answers,
       tableNames.questions,
       tableNames.userExams,

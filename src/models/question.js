@@ -26,8 +26,17 @@ export default class Question extends Model {
 
   static get relationMappings() {
     const Answer = require("./answer").default;
+    const UserAnswer = require("./user_answer").default;
 
     return {
+      user_answers: {
+        relation: Model.BelongsToOneRelation,
+        modelClass: UserAnswer,
+        join: {
+          from: `${tableNames.questions}.id`,
+          to: `${tableNames.userAnswers}.question_id`,
+        },
+      },
       answers: {
         relation: Model.HasManyRelation,
         modelClass: Answer,

@@ -45,11 +45,21 @@ export async function getUserExam(user_id, exam_id) {
     .where({ exam_id })
     .select("name", "description")
     .withGraphFetched(
-      `[${tableNames.questions}(questionFields).${tableNames.answers}(answerFields), ${tableNames.userExams}(userExamFields)]`
+      `[
+        ${tableNames.questions}(questionFields).${tableNames.answers}(answerFields),
+        ${tableNames.userExams}(userExamFields)]`
+    )
+    .withGraphFetched(
+      `[
+        ${tableNames.questions}(questionFields).${tableNames.userAnswers}(userAnswerFields),
+        ]`
     )
     .modifiers({
       userExamFields: (builder) => {
         builder.select("standalone_end_time");
+      },
+      userAnswerFields: (builder) => {
+        builder.select("answer_id");
       },
       questionFields: (builder) => {
         builder.select("id", "type", "info", "content");

@@ -17,6 +17,7 @@ exports.seed = async (knex) => {
   await Promise.all(
     [
       tableNames.userExams,
+      tableNames.userAnswers,
       tableNames.answers,
       tableNames.questions,
       tableNames.exams,
@@ -83,6 +84,7 @@ exports.seed = async (knex) => {
 
     await knex(tableNames.answers).insert(answers);
   }
+
   await knex(tableNames.userExams).insert({
     exam_id: examId[0],
     user_id: userId[0],
