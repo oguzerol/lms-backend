@@ -10,6 +10,7 @@ import {
   getUserExams,
   startUserExam,
   endUserExam,
+  isAlreadyAnswered,
 } from "./exams.services";
 
 // TODO: Create service layer
@@ -201,5 +202,38 @@ export async function endExam(req, res) {
   return res.json({
     status: true,
     exam: { id: exam_id },
+  });
+}
+
+export async function userAnswer(req, res) {
+  const { question_id, answer_id } = req.body;
+  const user_id = req.user.id;
+
+  // check exam id is given
+  if (![question_id].every(Boolean) || ![answer_id].every(Boolean)) {
+    return res.status(409).json({
+      status: false,
+      message: "Eksik parametre.",
+    });
+  }
+
+  // Check if user has exam
+  const [answeredQuestionErr, answeredQuestion] = await to(
+    isAlreadyAnswered(user_id, question_id)
+  );
+
+  if (answeredQuestionErr) {
+    return res.status(503).json({
+      status: false,
+      message: "Bir hata oluştu.",
+      stack: answeredQuestionErr.message,
+    });
+  }
+
+  console.log(question_id, answer_id, user_id);
+  console.log(answeredQuestion);
+
+  return res.json({
+    status: true,
   });
 }

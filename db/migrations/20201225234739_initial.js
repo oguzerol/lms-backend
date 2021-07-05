@@ -76,6 +76,7 @@ exports.up = async (knex) => {
 
   await knex.schema.createTable(tableNames.userAnswers, (table) => {
     table.increments().notNullable();
+    references(table, tableNames.users);
     references(table, tableNames.questions);
     references(table, tableNames.answers);
     addDefaultColumns(knex, table);

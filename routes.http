@@ -35,6 +35,16 @@ PUT {{host}}/api/v1/user/exams/1/end
 Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MTUzNjc3NDksImV4cCI6MTYxNTM4OTM0OX0.FLLrFNMeTLRcXuJ14MQ2nZCnqXj7Hyr9b7LqEIQNJQM
 
 
+### Answer 
+POST {{host}}/api/v1/user/exams/answer
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MjU1MTY2MzcsImV4cCI6MTYyNTUzODIzN30.SL6ngT2y4idctm2l61GTML1FcYfhYty_i1U33XH-8YM
+Content-Type: application/json
+
+{
+    "question_id": "1",
+    "answer_id": "1"
+}
+
 
 
 

@@ -1,8 +1,15 @@
 import User from "../../../models/user";
 import UserExam from "../../../models/user_exam";
 import tableNames from "../../../constants/tableNames";
+import UserAnswer from "../../../models/user_answer";
 import moment from "moment";
 
+export async function isAlreadyAnswered(user_id, question_id) {
+  return await UserAnswer.query()
+    .where("user_id", user_id)
+    .where("question_id", question_id)
+    .first();
+}
 export async function checkUserHasExam(user_id, exam_id) {
   return await UserExam.query()
     .where("user_id", user_id)
