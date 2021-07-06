@@ -4,12 +4,35 @@ import tableNames from "../../../constants/tableNames";
 import UserAnswer from "../../../models/user_answer";
 import moment from "moment";
 
-export async function isAlreadyAnswered(user_id, question_id) {
+export async function isAlreadyAnswered(user_id, question_id, answer_id) {
   return await UserAnswer.query()
     .where("user_id", user_id)
     .where("question_id", question_id)
     .first();
 }
+
+export async function updateAnswer(user_id, question_id, answer_id) {
+  return await UserAnswer.query()
+    .where("user_id", user_id)
+    .where("question_id", question_id)
+    .patch({
+      answer_id,
+    })
+    .returning("*")
+    .first();
+}
+
+export async function insertAnswer(user_id, question_id, answer_id) {
+  return await UserAnswer.query()
+    .insert({
+      user_id,
+      question_id,
+      answer_id,
+    })
+    .returning("*")
+    .first();
+}
+
 export async function checkUserHasExam(user_id, exam_id) {
   return await UserExam.query()
     .where("user_id", user_id)

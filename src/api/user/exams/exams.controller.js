@@ -11,6 +11,8 @@ import {
   startUserExam,
   endUserExam,
   isAlreadyAnswered,
+  updateAnswer,
+  insertAnswer,
 } from "./exams.services";
 
 // TODO: Create service layer
@@ -217,6 +219,8 @@ export async function userAnswer(req, res) {
     });
   }
 
+  // TODO: check isvalid answer for question
+
   // Check if user has exam
   const [answeredQuestionErr, answeredQuestion] = await to(
     isAlreadyAnswered(user_id, question_id)
@@ -230,10 +234,38 @@ export async function userAnswer(req, res) {
     });
   }
 
-  console.log(question_id, answer_id, user_id);
-  console.log(answeredQuestion);
-
-  return res.json({
-    status: true,
-  });
+  if (answeredQuestion) {
+    const [updatedQuestionError, updatedQuestion] = await to(
+      updateAnswer(user_id, question_id, answer_id)
+    );
+    console.log();
+    if (updatedQuestionError) {
+      return res.status(503).json({
+        status: false,
+        message: "Bir hata oluştu.",
+        stack: updatedQuestionError.message,
+      });
+    } else {
+      return res.json({
+        question_id: updatedQuestion.question_id,
+        answer_id: updatedQuestion.answer_id,
+      });
+    }
+  } else {
+    const [insertedQuestionError, insertedQuestion] = await to(
+      insertAnswer(user_id, question_id, answer_id)
+    );
+    if (insertedQuestionError) {
+      return res.status(503).json({
+        status: false,
+        message: "Bir hata oluştu.",
+        stack: insertedQuestionError.message,
+      });
+    } else {
+      return res.json({
+        question_id: insertedQuestion.question_id,
+        answer_id: insertedQuestion.answer_id,
+      });
+    }
+  }
 }
