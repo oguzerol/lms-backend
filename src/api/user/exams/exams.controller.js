@@ -61,7 +61,17 @@ export async function exam(req, res) {
   if (!examExist) {
     return res.status(409).json({
       status: false,
-      message: "Böyle bir sınav yok.",
+      message: "Bu sınavı erişim hakkınız yok.",
+    });
+  }
+
+  if (
+    examExist.standalone_status === 2 ||
+    examExist.standalone_status === null
+  ) {
+    return res.status(409).json({
+      status: false,
+      message: "Bu sınavı erişim hakkınız yok.",
     });
   }
 
