@@ -76,7 +76,7 @@ exports.up = async (knex) => {
 
   await knex.schema.createTable(tableNames.userAnswers, (table) => {
     table.increments().notNullable();
-    table.unique(["question_id", "answer_id"]);
+    table.unique(["user_id", "question_id", "answer_id"]);
     references(table, tableNames.users);
     references(table, tableNames.questions);
     references(table, tableNames.answers);

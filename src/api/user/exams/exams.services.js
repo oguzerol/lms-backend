@@ -4,11 +4,18 @@ import tableNames from "../../../constants/tableNames";
 import UserAnswer from "../../../models/user_answer";
 import moment from "moment";
 
-export async function isAlreadyAnswered(user_id, question_id, answer_id) {
+export async function isAlreadyAnswered(user_id, question_id) {
   return await UserAnswer.query()
     .where("user_id", user_id)
     .where("question_id", question_id)
     .first();
+}
+
+export async function deleteAnswer(user_id, question_id) {
+  return await UserAnswer.query()
+    .where("user_id", user_id)
+    .where("question_id", question_id)
+    .delete();
 }
 
 export async function updateAnswer(user_id, question_id, answer_id) {
@@ -97,7 +104,8 @@ export async function getUserExam(user_id, exam_id) {
       answerFields: (builder) => {
         builder.select("id", "label", "content");
       },
-    });
+    })
+    .first();
 }
 
 export async function startUserExam(user_id, exam_id) {

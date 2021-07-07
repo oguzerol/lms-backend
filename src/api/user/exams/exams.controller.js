@@ -13,6 +13,7 @@ import {
   isAlreadyAnswered,
   updateAnswer,
   insertAnswer,
+  deleteAnswer,
 } from "./exams.services";
 
 // TODO: Create service layer
@@ -212,7 +213,7 @@ export async function userAnswer(req, res) {
   const user_id = req.user.id;
 
   // check exam id is given
-  if (![question_id].every(Boolean) || ![answer_id].every(Boolean)) {
+  if (![question_id].every(Boolean)) {
     return res.status(409).json({
       status: false,
       message: "Eksik parametre.",
@@ -229,20 +230,38 @@ export async function userAnswer(req, res) {
   if (answeredQuestionErr) {
     return res.status(503).json({
       status: false,
-      message: "Bir hata oluştu.",
+      message: "Bir hata oluştu. 1",
       stack: answeredQuestionErr.message,
     });
   }
 
   if (answeredQuestion) {
+    if (!answer_id) {
+      const [deletedQuestionError, deletedQuestion] = await to(
+        deleteAnswer(user_id, question_id, answer_id)
+      );
+
+      if (deletedQuestionError) {
+        return res.status(503).json({
+          status: false,
+          message: "Verilen cevap geri çekilirken bir hata oldu",
+          stack: deletedQuestionError.message,
+        });
+      } else {
+        return res.json({
+          question_id: question_id,
+          answer_id: null,
+        });
+      }
+    }
+
     const [updatedQuestionError, updatedQuestion] = await to(
       updateAnswer(user_id, question_id, answer_id)
     );
-    console.log();
     if (updatedQuestionError) {
       return res.status(503).json({
         status: false,
-        message: "Bir hata oluştu.",
+        message: "Verilen cevap güncellenirken bir hata oldu",
         stack: updatedQuestionError.message,
       });
     } else {
@@ -258,7 +277,7 @@ export async function userAnswer(req, res) {
     if (insertedQuestionError) {
       return res.status(503).json({
         status: false,
-        message: "Bir hata oluştu.",
+        message: "Cevap verilirken bir hata oldu.",
         stack: insertedQuestionError.message,
       });
     } else {
