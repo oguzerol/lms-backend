@@ -61,6 +61,7 @@ export async function getUserAllExams(user_id, type) {
     dbQuery = UserExam.query()
       .where("user_id", user_id)
       .where("standalone_status", null)
+      .orWhere("standalone_status", 1)
       .select("")
       .withGraphJoined("exams as info");
   }
@@ -93,7 +94,7 @@ export async function getUserExam(user_id, exam_id) {
     )
     .modifiers({
       userExamFields: (builder) => {
-        builder.select("standalone_end_time");
+        builder.select("id", "standalone_end_time");
       },
       userAnswerFields: (builder) => {
         builder.select("answer_id");
