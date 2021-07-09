@@ -1,7 +1,6 @@
 import to from "await-to-js";
 import moment from "moment";
 
-import UserExam from "../../../models/user_exam";
 import { emitExamStart } from "../../../events/exam";
 import {
   getUserAllExams,
@@ -85,7 +84,6 @@ export async function exam(req, res) {
     });
   }
 
-  emitExamStart(req.io, user_id, exam_id);
   res.json(exam);
 }
 
@@ -157,6 +155,8 @@ export async function startExam(req, res) {
   // }
 
   // check is already finished or started
+  console.log(examExist);
+
   const isExamFinished =
     examExist.standalone_status === 2 ||
     (examExist.standalone_end_time !== null &&
@@ -174,11 +174,14 @@ export async function startExam(req, res) {
   // status
   // null is not started
   // 1 is active
-  // 2 is finished
+  // 2 is finisheexamExist.standalone_status === 2d
 
+  if (examExist.standalone_status === null) {
+    emitExamStart(req.io, user_id, exam_id);
+  }
   await startUserExam(user_id, exam_id);
 
-  return exam(req, res);
+  return res.json({ status: true });
 }
 
 export async function endExam(req, res) {

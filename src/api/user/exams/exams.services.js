@@ -1,4 +1,3 @@
-import User from "../../../models/user";
 import UserExam from "../../../models/user_exam";
 import tableNames from "../../../constants/tableNames";
 import UserAnswer from "../../../models/user_answer";
@@ -76,30 +75,29 @@ export async function getUserAllExams(user_id, type) {
 }
 
 export async function getUserExam(user_id, exam_id) {
-  // TODO: Just return valid ones
-  // TODO: Is User or UserExam ??
-  return await UserExam.relatedQuery(tableNames.exams)
+  return await UserExam.query()
     .for(user_id)
     .where({ id: exam_id })
-    .select("id", "description")
+    .select("id", "standalone_end_time")
     .withGraphFetched(
       `[
-        ${tableNames.questions}(questionFields).${tableNames.answers}(answerFields),
-        ${tableNames.userExams}(userExamFields)]`
+        ${tableNames.exams}(examFields) as exam.${tableNames.questions}(questionFields).${tableNames.answers}(answerFields),
+        ]`
     )
     .withGraphFetched(
       `[
-        ${tableNames.questions}(questionFields).${tableNames.userAnswers}(userAnswerFields),
+        ${tableNames.exams}(examFields) as exam.${tableNames.questions}(questionFields).${tableNames.userAnswers}(userAnswerFields) as user_answer,
         ]`
     )
     .modifiers({
-      userExamFields: (builder) => {
-        builder.select("id", "standalone_end_time");
+      examFields: (builder) => {
+        builder.select("");
       },
       userAnswerFields: (builder) => {
         builder.select("answer_id");
       },
       questionFields: (builder) => {
+        builder.orderBy("id");
         builder.select("id", "type", "info", "content");
       },
       answerFields: (builder) => {
@@ -110,6 +108,8 @@ export async function getUserExam(user_id, exam_id) {
 }
 
 export async function startUserExam(user_id, exam_id) {
+  console.log("start");
+
   return await UserExam.query()
     .where("user_id", user_id)
     .where("exam_id", exam_id)
@@ -121,6 +121,7 @@ export async function startUserExam(user_id, exam_id) {
 }
 
 export async function endUserExam(user_id, exam_id) {
+  console.log("end");
   return await UserExam.query()
     .where("user_id", user_id)
     .where("exam_id", exam_id)

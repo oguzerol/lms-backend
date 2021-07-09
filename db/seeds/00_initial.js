@@ -57,11 +57,21 @@ exports.seed = async (knex) => {
     standalone_usage_time: new Date(),
   };
 
-  const examId = await knex(tableNames.exams).insert([exam], "id");
+  const exam2 = {
+    name: "Sample Exam 2",
+    description: "Sample Desc2 ",
+    price: 20.0,
+    question_count: 80,
+    start_time: new Date(),
+    end_time: new Date(),
+    standalone_usage_time: new Date(),
+  };
+
+  const sampleExam1 = await knex(tableNames.exams).insert([exam], "id");
 
   for (const question of excelData) {
     const newQuestion = {
-      exam_id: examId[0],
+      exam_id: sampleExam1[0],
       type: question[questionOrders.type],
       info: question[questionOrders.info],
       content: question[questionOrders.content],
@@ -86,7 +96,40 @@ exports.seed = async (knex) => {
   }
 
   await knex(tableNames.userExams).insert({
-    exam_id: examId[0],
+    exam_id: sampleExam1[0],
+    user_id: userId[0],
+  });
+
+  const sampleExam2 = await knex(tableNames.exams).insert([exam2], "id");
+
+  for (const question of excelData) {
+    const newQuestion = {
+      exam_id: sampleExam2[0],
+      type: question[questionOrders.type],
+      info: question[questionOrders.info],
+      content: question[questionOrders.content],
+    };
+
+    const questionId = await knex(tableNames.questions).insert(
+      newQuestion,
+      "id"
+    );
+
+    const answers = answerLabels.reduce((answer, label) => {
+      answer.push({
+        label,
+        question_id: questionId[0],
+        content: question[answerOrders[label]],
+        is_correct: question[answerOrders.is_correct] === label,
+      });
+      return answer;
+    }, []);
+
+    await knex(tableNames.answers).insert(answers);
+  }
+
+  await knex(tableNames.userExams).insert({
+    exam_id: sampleExam2[0],
     user_id: userId[0],
   });
 };

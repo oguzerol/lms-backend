@@ -1,5 +1,4 @@
 import { EventEmitter } from "events";
-import UserExam from "../models/user_exam";
 import { endUserExam } from "../api/user/exams/exams.services";
 
 // TODO: Read and populate from db
@@ -12,11 +11,10 @@ function onExamStart(socketio, user_id, exam_id) {
 
   timers[user_id] = setTimeout(() => {
     onExamEnd(socketio, user_id, exam_id);
-  }, 15000);
+  }, 3 * 1000 * 60 * 60);
 }
 
 async function onExamEnd(socketio, user_id, exam_id) {
-  console.log("15 saniye  cagirildi sinav bitti", user_id);
   socketio.to(user_id).sockets.emit("end-exam");
   await endUserExam(user_id, exam_id);
   clearTimeout(timers[user_id]);
