@@ -3,7 +3,6 @@ import moment from "moment";
 
 import { emitExamStart } from "../../../events/exam";
 import {
-  getUserAllExams,
   checkUserHasExam,
   getUserExam,
   getUserExams,
@@ -22,7 +21,7 @@ export async function exams(req, res) {
   const user_id = req.user.id;
   const { type } = req.query;
 
-  const [err, exams] = await to(getUserAllExams(user_id, type));
+  const [err, exams] = await to(getUserExams(user_id, type));
   if (err) {
     return res.status(503).json({
       status: false,
@@ -222,14 +221,42 @@ export async function endExam(req, res) {
 }
 
 export async function userAnswer(req, res) {
-  const { question_id, answer_id } = req.body;
+  const { exam_id, question_id, answer_id } = req.body;
   const user_id = req.user.id;
 
   // check exam id is given
-  if (![question_id].every(Boolean)) {
+  if (![question_id].every(Boolean) && ![exam_id].every(Boolean)) {
     return res.status(409).json({
       status: false,
       message: "Eksik parametre.",
+    });
+  }
+
+  // Check if user has exam
+  const [examExistErr, examExist] = await to(
+    checkUserHasExam(user_id, exam_id)
+  );
+
+  if (examExistErr) {
+    return res.status(503).json({
+      status: false,
+      message: "Bir hata oluştu.",
+      stack: examExistErr.message,
+    });
+  }
+
+  if (!examExist) {
+    return res.status(409).json({
+      status: false,
+      message: "Bu sınav yok veya bu sınava sahip değilsiniz.",
+    });
+  }
+
+  if (examExist.standalone_status !== 1) {
+    console.log(examExist);
+    return res.status(409).json({
+      status: false,
+      message: "Bu sınava şuanda cevap veremezsiniz.",
     });
   }
 
@@ -251,7 +278,7 @@ export async function userAnswer(req, res) {
   if (answeredQuestion) {
     if (!answer_id) {
       const [deletedQuestionError, deletedQuestion] = await to(
-        deleteAnswer(user_id, question_id, answer_id)
+        deleteAnswer(user_id, question_id)
       );
 
       if (deletedQuestionError) {
