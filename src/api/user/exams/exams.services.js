@@ -49,7 +49,7 @@ export async function checkUserHasExam(user_id, exam_id) {
 export async function getUserExams(user_id, type) {
   let dbQuery = UserExam.query()
     .where("user_id", user_id)
-    .select("")
+    .select("standalone_status")
     .withGraphJoined("exams as info");
 
   if (type === "undone") {

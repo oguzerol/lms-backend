@@ -126,13 +126,13 @@ export async function startExam(req, res) {
   }
 
   // TODO: via db
-  const activeExam = userExams.filter(
-    (exam) => exam.standalone_start_time && exam.standalone_status !== 2
-  );
+  const activeExam = userExams.filter((exam) => {
+    return exam.standalone_status === 1;
+  });
 
   if (activeExam.length > 0) {
-    if (activeExam[0].exam_id === parseFloat(exam_id)) {
-      return exam(req, res);
+    if (activeExam[0].info.id === parseFloat(exam_id)) {
+      return res.json({ status: true });
     } else {
       return res.status(409).json({
         status: false,
@@ -140,21 +140,6 @@ export async function startExam(req, res) {
       });
     }
   }
-
-  // // check standalone usage
-  // if (
-  //   moment(moment().format()).isBefore(moment(examExist.standalone_usage_time))
-  // ) {
-  //   return res.status(409).json({
-  //     status: false,
-  //     error: `Bu sınav ${moment(exam.standalone_usage_time).format(
-  //       "MMMM DD YYYY - HH:mm"
-  //     )} tarihinden sonra tek başına çözülebilir.`,
-  //   });
-  // }
-
-  // check is already finished or started
-  console.log(examExist);
 
   const isExamFinished =
     examExist.standalone_status === 2 ||
@@ -177,8 +162,8 @@ export async function startExam(req, res) {
 
   if (examExist.standalone_status === null) {
     emitExamStart(req.io, user_id, exam_id);
+    await startUserExam(user_id, exam_id);
   }
-  await startUserExam(user_id, exam_id);
 
   return res.json({ status: true });
 }
@@ -253,7 +238,6 @@ export async function userAnswer(req, res) {
   }
 
   if (examExist.standalone_status !== 1) {
-    console.log(examExist);
     return res.status(409).json({
       status: false,
       message: "Bu sınava şuanda cevap veremezsiniz.",

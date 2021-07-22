@@ -17,7 +17,7 @@ export async function exams(_, res) {
     });
   }
 
-  res.json(exams);
+  return res.json(exams);
 }
 
 export async function enroll(req, res) {
