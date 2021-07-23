@@ -47,27 +47,12 @@ export async function checkUserHasExam(user_id, exam_id) {
 }
 
 export async function getUserExams(user_id, type) {
-  let dbQuery = UserExam.query()
+  return UserExam.query()
     .where("user_id", user_id)
-    .select("standalone_status")
+    .where("standalone_status", null)
+    .orWhere("standalone_status", 1)
+    .select("")
     .withGraphJoined("exams as info");
-
-  if (type === "undone") {
-    dbQuery = UserExam.query()
-      .where("user_id", user_id)
-      .where("standalone_status", null)
-      .orWhere("standalone_status", 1)
-      .select("")
-      .withGraphJoined("exams as info");
-  }
-  if (type === "done") {
-    dbQuery = UserExam.query()
-      .where("user_id", user_id)
-      .where("standalone_status", 2)
-      .select("")
-      .withGraphJoined("exams as info");
-  }
-  return await dbQuery;
 }
 
 export async function getUserExam(user_id, exam_id) {

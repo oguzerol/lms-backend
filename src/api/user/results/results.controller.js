@@ -1,16 +1,13 @@
 import to from "await-to-js";
+import { checkUserHasExam } from "../exams/exams.services";
 
-import {
-  checkUserHasExam,
-  getUserExam,
-  getUserExams,
-} from "./results.services";
+import { getUserResult, getUserResults } from "./results.services";
 
 export async function results(req, res) {
   const user_id = req.user.id;
   const { type } = req.query;
 
-  const [err, exams] = await to(getUserExams(user_id, type));
+  const [err, exams] = await to(getUserResults(user_id, type));
   if (err) {
     return res.status(503).json({
       status: false,
@@ -62,7 +59,7 @@ export async function result(req, res) {
     });
   }
 
-  const [err, exam] = await to(getUserExam(user_id, exam_id));
+  const [err, exam] = await to(getUserResult(user_id, exam_id));
 
   if (err) {
     return res.status(503).json({
