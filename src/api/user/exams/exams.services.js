@@ -89,8 +89,6 @@ export async function getUserExam(user_id, exam_id) {
 }
 
 export async function startUserExam(user_id, exam_id) {
-  console.log("start");
-
   return await UserExam.query()
     .where("user_id", user_id)
     .where("exam_id", exam_id)
@@ -102,7 +100,6 @@ export async function startUserExam(user_id, exam_id) {
 }
 
 export async function endUserExam(user_id, exam_id) {
-  console.log("end");
   return await UserExam.query()
     .where("user_id", user_id)
     .where("exam_id", exam_id)

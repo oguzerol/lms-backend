@@ -6,7 +6,7 @@ import tablaNames from "../../constants/tableNames";
 
 export async function exams(_, res) {
   const [err, exams] = await to(
-    Exam.query().select("name", "description", "price")
+    Exam.query().select("id", "name", "description", "price")
   );
 
   if (err) {
