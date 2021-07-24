@@ -12,7 +12,7 @@ export async function getUserResults(user_id, type) {
 export async function getUserResult(user_id, exam_id) {
   return await UserExam.query()
     .for(user_id)
-    .where({ id: exam_id })
+    .where({ exam_id: exam_id })
     .select("id", "standalone_end_time")
     .withGraphFetched(
       `[

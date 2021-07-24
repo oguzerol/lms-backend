@@ -46,19 +46,19 @@ export async function checkUserHasExam(user_id, exam_id) {
     .first();
 }
 
-export async function getUserExams(user_id, type) {
+export async function getUserExams(user_id) {
   return UserExam.query()
     .where("user_id", user_id)
     .where("standalone_status", null)
     .orWhere("standalone_status", 1)
-    .select("")
+    .select("standalone_status")
     .withGraphJoined("exams as info");
 }
 
 export async function getUserExam(user_id, exam_id) {
   return await UserExam.query()
     .for(user_id)
-    .where({ id: exam_id })
+    .where({ exam_id: exam_id })
     .select("id", "standalone_end_time")
     .withGraphFetched(
       `[

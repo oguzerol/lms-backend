@@ -75,15 +75,15 @@ export async function exam(req, res) {
 
   const [err, exam] = await to(getUserExam(user_id, exam_id));
 
-  if (err) {
+  if (err || typeof exam === "undefined") {
     return res.status(503).json({
       status: false,
       message: "Sınav getirilirken bir hata oluştu.",
-      stack: err.message,
+      stack: err && err.message,
     });
   }
 
-  res.json(exam);
+  return res.json(exam);
 }
 
 export async function startExam(req, res) {
@@ -130,6 +130,7 @@ export async function startExam(req, res) {
     return exam.standalone_status === 1;
   });
 
+  console.log(activeExam);
   if (activeExam.length > 0) {
     if (activeExam[0].info.id === parseFloat(exam_id)) {
       return res.json({ status: true });

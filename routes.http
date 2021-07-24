@@ -14,7 +14,7 @@ GET {{host}}/api/v1/exams
 
 ### enroll Exams
 POST {{host}}/api/v1/exams/1/enroll
-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MTI1NjE1NDYsImV4cCI6MTYxMjU4MzE0Nn0.6PNxHDB-tIhTyCFOQsIZOKP5UjrMIreBbgoh4EJrmaM
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoxLCJ1c2VybmFtZSI6Im9ndXplcm9sIiwiZW1haWwiOiJvZUBvbmxpbmV5ZHQuY29tIiwiaXNfYWRtaW4iOmZhbHNlLCJpc19zdXBlcnVzZXIiOnRydWV9LCJpYXQiOjE2MjcxNDkyNTEsImV4cCI6MTYyNzE3MDg1MX0.vWwAmlijUaLzErA8ObLNlGapF-e8EOr3bBhNgoY61BU
 
 ### Get User Exams
 GET {{host}}/api/v1/user/exams
