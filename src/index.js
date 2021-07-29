@@ -30,11 +30,15 @@ app.use(cors());
 app.use(express.json());
 
 // SocketIO configuration
+app.use(function (req, res, next) {
+  console.log("test");
+  next();
+});
 
 require("./config/socketio").default(socketio, app);
 
 // Register Events.
-registerEvents();
+registerEvents(socketio);
 
 app.get("/", (req, res) => {
   res.json({

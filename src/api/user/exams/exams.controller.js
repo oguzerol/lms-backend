@@ -14,9 +14,6 @@ import {
   deleteAnswer,
 } from "./exams.services";
 
-// TODO: Create service layer
-// TODO: Handle errors via try catch in just controller
-
 export async function exams(req, res) {
   const user_id = req.user.id;
   const { type } = req.query;
@@ -162,7 +159,7 @@ export async function startExam(req, res) {
   // 2 is finisheexamExist.standalone_status === 2d
 
   if (examExist.standalone_status === null) {
-    emitExamStart(req.io, user_id, exam_id);
+    emitExamStart(user_id, exam_id);
     await startUserExam(user_id, exam_id);
   }
 

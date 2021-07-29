@@ -3,6 +3,12 @@ import tableNames from "../../../constants/tableNames";
 import UserAnswer from "../../../models/user_answer";
 import moment from "moment";
 
+export async function getAllActiveExams() {
+  return await UserExam.query()
+    .select("user_id", "exam_id", "standalone_end_time")
+    .where("standalone_status", 1);
+}
+
 export async function isAlreadyAnswered(user_id, question_id) {
   return await UserAnswer.query()
     .where("user_id", user_id)
