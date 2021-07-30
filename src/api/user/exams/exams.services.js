@@ -64,7 +64,7 @@ export async function getUserExams(user_id) {
 export async function getUserExam(user_id, exam_id) {
   return await UserExam.query()
     .for(user_id)
-    .where({ exam_id: exam_id })
+    .where({ user_id: user_id })
     .select("id", "standalone_end_time")
     .withGraphFetched(
       `[
@@ -81,6 +81,7 @@ export async function getUserExam(user_id, exam_id) {
         builder.select("");
       },
       userAnswerFields: (builder) => {
+        builder.where({ user_id: user_id });
         builder.select("answer_id");
       },
       questionFields: (builder) => {

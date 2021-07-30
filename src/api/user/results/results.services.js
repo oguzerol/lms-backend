@@ -29,6 +29,7 @@ export async function getUserResult(user_id, exam_id) {
         builder.select("");
       },
       userAnswerFields: (builder) => {
+        builder.where({ user_id: user_id });
         builder.select("answer_id");
       },
       questionFields: (builder) => {

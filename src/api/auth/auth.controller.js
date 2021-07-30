@@ -16,14 +16,14 @@ export async function login(req, res) {
   const [err, user] = await to(User.query().where({ email }).first());
 
   if (err)
-    return res.status(401).json({
+    return res.status(422).json({
       status: false,
       message: errorMessages.dbError,
       stack: err.message,
     });
 
   if (!user) {
-    return res.status(401).json({
+    return res.status(422).json({
       status: false,
       message: errorMessages.invalidLogin,
     });
@@ -31,14 +31,24 @@ export async function login(req, res) {
 
   const validPassword = await bcrypt.compare(password, user.password);
   if (!validPassword) {
-    return res.status(401).json({
+    return res.status(422).json({
       status: false,
       message: errorMessages.invalidLogin,
     });
   }
 
   const jwtToken = jwtGenerator(user);
-  return res.json(jwtToken);
+
+  return res.json({
+    token: jwtToken,
+    user: {
+      id: user.id,
+      username: user.username,
+      email: user.email,
+      is_admin: user.is_admin,
+      is_superuser: user.is_super_admin,
+    },
+  });
 }
 
 export async function register(req, res) {
@@ -54,7 +64,7 @@ export async function register(req, res) {
   }
 
   if (existingEmail) {
-    return res.status(401).json({
+    return res.status(422).json({
       status: false,
       message: errorMessages.emailInUse,
     });
@@ -73,7 +83,7 @@ export async function register(req, res) {
   }
 
   if (existingUsername) {
-    return res.status(401).json({
+    return res.status(422).json({
       status: false,
       message: errorMessages.emailInUse,
     });
@@ -88,21 +98,20 @@ export async function register(req, res) {
 
   const newUser = await User.query().insert(user);
   if (!(newUser instanceof User)) {
-    return res.status(400).json({
+    return res.status(422).json({
       status: false,
       message: "Validasyon hatası",
     });
   }
 
-  const jwtToken = jwtGenerator(user);
-  return res.json(jwtToken);
+  return res.status(200).json({ status: true });
 }
 
 export function me(req, res) {
   const token = req.header("token");
 
   if (!token) {
-    return res.status(403).json({ msg: "authorization denied" });
+    return res.status(401).json({ msg: "authorization denied" });
   }
 
   try {
@@ -110,6 +119,7 @@ export function me(req, res) {
 
     req.user = verify.user;
     res.json(req.user);
+    console.log(req.user);
   } catch (err) {
     res.status(401).json({ status: false, message: "Token is not valid" });
   }

@@ -66,7 +66,7 @@ export async function enroll(req, res) {
   if (purchasedExam) {
     return res.status(409).json({
       status: false,
-      message: "Böyle sınavı daha önce satın aldınız.",
+      message: "Bu sınavı daha önce satın aldınız.",
     });
   }
 

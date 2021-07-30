@@ -63,9 +63,9 @@ POST {{host}}/api/v1/auth/register
 Content-Type: application/json
 
 {
-    "email": "oguzerol1@test.com",
+    "email": "oguzerol2@test.com",
     "password": "010203asd",
-    "username": "oguztest1"
+    "username": "oguztest2"
 }
 
 ### Auth Me
