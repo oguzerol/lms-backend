@@ -119,7 +119,6 @@ export function me(req, res) {
 
     req.user = verify.user;
     res.json(req.user);
-    console.log(req.user);
   } catch (err) {
     res.status(401).json({ status: false, message: "Token is not valid" });
   }
