@@ -3,6 +3,13 @@ import bcrypt from "bcrypt";
 import jwtGenerator from "../../utils/jwtGenerator";
 import User from "../../models/user";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import {
+  getResetLinkedUser,
+  getUser,
+  updateUserPassword,
+  updateUserResetLink,
+} from "./auth.services";
 
 const errorMessages = {
   invalidLogin: "Kullanıcı adı veya şifre yanlış.",
@@ -10,6 +17,15 @@ const errorMessages = {
   emailInUse: "E-mail şuanda kullanılıyor.",
   name: "Kullanıcı ismi mevcut.",
 };
+
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  secure: false,
+  auth: {
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASSWORD,
+  },
+});
 
 export async function login(req, res) {
   const { email, password } = req.body;
@@ -122,4 +138,111 @@ export function me(req, res) {
   } catch (err) {
     res.status(401).json({ status: false, message: "Token is not valid" });
   }
+}
+
+export async function resetPassword(req, res) {
+  const { resetLink, newPassword } = req.body;
+
+  jwt.verify(
+    resetLink,
+    process.env.jwtResetSecret,
+    async (err, decodedData) => {
+      if (err) {
+        return res.status(422).json({
+          status: false,
+          message:
+            "Şifre yenilemek için süreniz doldu veya hatalı yenileme linki.",
+        });
+      }
+
+      // Get user from reset link
+      const [resetLinkedErr, resetLinkedUser] = await to(
+        getResetLinkedUser(resetLink)
+      );
+
+      if (resetLinkedErr) {
+        return res.status(503).json({
+          status: false,
+          message:
+            "Beklenmeyen bir hata oluştu lütfen daha sonra tekrar deneyiniz.",
+        });
+      }
+
+      if (!resetLinkedUser) {
+        return res.status(422).json({
+          status: false,
+          message: "Bu linke sahip kullanıcı bulunamadı.",
+        });
+      }
+      const [updatedUserErr, updatedUser] = await to(
+        updateUserPassword(newPassword, resetLink)
+      );
+      // Save user password and reset reset_link
+
+      if (updatedUserErr) {
+        return res.status(503).json({
+          status: false,
+          message:
+            "Şifreyi kayıt ederken bir hata oldu. Lütfen tekrar deneyiniz.",
+        });
+      }
+      res.json({
+        status: true,
+        message: "Şifre başarılı bir şekilde değiştirildi.",
+      });
+    }
+  );
+}
+
+export async function forgotPassword(req, res) {
+  const { email } = req.body;
+  const [userErr, user] = await to(getUser(email));
+
+  if (userErr || !user) {
+    return res.status(400).json({
+      status: false,
+      message:
+        "Beklenmeyen bir hata oluştu lütfen daha sonra tekrar deneyiniz.",
+    });
+  }
+
+  const token = jwt.sign({ id: user.id }, process.env.jwtResetSecret, {
+    expiresIn: "20m",
+  });
+
+  const [updatedUserErr, updatedUser] = await to(
+    updateUserResetLink(email, token)
+  );
+
+  if (updatedUserErr) {
+    return res.status(400).json({
+      status: false,
+      message:
+        "Beklenmeyen bir hata oluştu lütfen daha sonra tekrar deneyiniz.",
+    });
+  }
+
+  let mailOptions = {
+    from: "onlineydt@gmail.com",
+    to: email,
+    subject: "Şifre Yenileme",
+    html: `
+     <h2>Şifrenizini yenilemek için aşağdaki linke tıklayınız.</h2>
+    `,
+  };
+
+  transporter
+    .sendMail(mailOptions)
+    .then((data) => {
+      return res.json({
+        status: true,
+        message: "Mesaj gönderildi. Lütfen spam kutunuzu kontrol ediniz.",
+      });
+    })
+    .catch((err) => {
+      return res.status(409).json({
+        status: false,
+        message: "Mesaj gönderilirken bir hata oldu",
+      });
+    });
 }

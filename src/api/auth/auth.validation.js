@@ -16,3 +16,16 @@ export const register = {
     username: Joi.string().min(3).required(),
   }),
 };
+
+export const resetPassword = {
+  body: Joi.object({
+    resetLink: Joi.string().required(),
+    newPassword: Joi.string().min(6).required(),
+  }),
+};
+
+export const forgotPassword = {
+  body: Joi.object({
+    email: Joi.string().email().required(),
+  }),
+};

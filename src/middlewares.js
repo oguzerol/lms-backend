@@ -9,7 +9,7 @@ function notFound(req, res, next) {
 
 /* eslint-disable no-unused-vars */
 function errorHandler(err, req, res, next) {
-  console.log("generik error", err);
+  console.log("common error", err);
   if (err instanceof ValidationError) {
     let errorResponse = {
       status: 400,

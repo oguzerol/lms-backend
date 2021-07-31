@@ -19,6 +19,15 @@ router.post(
   authController.register
 );
 
+router.put(
+  "/reset-password",
+  authLimiter.forgotPasswordRateLimiter,
+  validate(authValidation.resetPassword),
+  authController.resetPassword
+);
+
+router.put("/forgot-password", authController.forgotPassword);
+
 router.get("/me", authController.me);
 
 module.exports = router;
