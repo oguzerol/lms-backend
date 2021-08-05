@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import User from "../../models/user";
 
 export async function getResetLinkedUser(resetLink) {
@@ -12,6 +13,7 @@ export async function updateUserPassword(password, resetLink) {
     .where("reset_link", resetLink)
     .patch({
       password: bcryptPassword,
+      reset_link: null,
     })
     .returning("*")
     .first();

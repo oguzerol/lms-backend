@@ -127,7 +127,6 @@ export async function startExam(req, res) {
     return exam.standalone_status === 1;
   });
 
-  console.log(activeExam);
   if (activeExam.length > 0) {
     if (activeExam[0].info.id === parseFloat(exam_id)) {
       return res.json({ status: true });

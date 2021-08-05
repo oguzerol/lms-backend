@@ -171,9 +171,10 @@ export async function resetPassword(req, res) {
       if (!resetLinkedUser) {
         return res.status(422).json({
           status: false,
-          message: "Bu linke sahip kullanıcı bulunamadı.",
+          message: "Token geçerli değil",
         });
       }
+
       const [updatedUserErr, updatedUser] = await to(
         updateUserPassword(newPassword, resetLink)
       );
@@ -228,6 +229,7 @@ export async function forgotPassword(req, res) {
     subject: "Şifre Yenileme",
     html: `
      <h2>Şifrenizini yenilemek için aşağdaki linke tıklayınız.</h2>
+     <a href="http://localhost:3000/reset-password/${token}"> Şifremi Yenile </a>
     `,
   };
 
